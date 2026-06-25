@@ -1,9 +1,78 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { dummyAccountsData, PLATFORMS } from '../assets/assets';
+import { PlusIcon } from 'lucide-react';
+import AccountList from '../components/AccountList';
+
+
 
 const Accounts = () => {
+
+  const[accounts,setAccounts]=useState<any[]>([])
+  const[connecting,setConnecting] = useState< String|null>(null)
+  const [showPlatformPicker, setShowPlatformPicker] = useState(false);
+
+  const fetchAccount = async(isSync: boolean = false ,platform?:string|null,sucessMsg?:string)=>{
+    try{
+      setAccounts(dummyAccountsData);
+      console.log(isSync,platform,sucessMsg)
+    }
+    catch(error){
+      console.log("Error fetching accounts :",error)
+    }
+  }
+
+  useEffect(()=>{
+    fetchAccount()
+  },[])
+
+  const handleConnect = async(platformId:string)=>{
+    try{
+      setConnecting(platformId)
+      // window.location.href = `/api/auth/${platformId}`
+      setTimeout(()=>{
+        setConnecting(null)
+        setAccounts((prev)=>[...prev,dummyAccountsData[0]])
+        setShowPlatformPicker(false)
+      },5000)
+    }catch(err){
+      console.log("Error connecting account :",err)
+      alert("Failed to connect account")
+    }
+  }
+  
+  const handlDisconnect = async (accountId:string)=>{
+    try{
+      // await axios.delete(`/api/accounts/${accountId}`)
+      setAccounts(accounts.filter((a)=>a.id!==accountId))
+      alert("Account disconnected successfully")
+
+    }catch(err){
+      console.log("Error disconnecting account",err)
+      alert("Failed to disconnect account")
+    }
+  }
+
+  const connectedIds = accounts.map((a)=>a.platformId)
+
   return (
-    <div>
-      Accounts
+    <div className='p-10 max-w-4xl mx-auto'>
+      {/* header */}
+      <div className='flex items-center justify-between mb-8'>
+        <div>
+          <h2 className='text-3xl font-medium text-slate-900'>Connected Accounts</h2>
+          <p className='text-slate-500'> {accounts.length} of {PLATFORMS.length} social accounts connected</p>
+        </div>
+        <button onClick={()=>setShowPlatformPicker(true)} className='flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600'>
+          <PlusIcon className='size-4'/> Connect Account
+        </button>
+       </div>
+      {/* Platform Picker Model */}
+      
+      <div>
+
+      </div>
+      {/* connected Account List */}
+      <AccountList accounts={accounts} onDisconnect={handlDisconnect}/>
     </div>
   )
 }
