@@ -1,4 +1,4 @@
-import { CheckCircle, CheckCircleIcon, XIcon } from "lucide-react";
+import { CheckCircleIcon, ExternalLink, XIcon } from "lucide-react";
 import { useState } from "react";
 import { PLATFORMS } from "../assets/assets";
 
@@ -29,7 +29,12 @@ const PlatformPickerModel = ({connectedIds,connecting,onClose,onConnect}:Platfor
                         const isConnected = connectedIds.includes(p.id);
                         const isConnecting = connecting === p.id
                         return(
-                            <button key={p.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-red-200 hover:bg-red-50 ">
+                            <button key={p.id} 
+                            disabled={isConnected || isConnecting}
+                            onClick={()=>{if(!isConnected && !isConnecting)onConnect(p.id)}}
+                            className={`flex items-center justify-between p-3 rounded-xl border border-slate-200  ${isConnected ?"border-red-200 bg-red-50 cursor-default": "hover:border-red-300 hover:bg-red-50/50 transition-colors "}
+                            ${isConnecting && "opacity-50"}
+                            `}>
                                 {/* Icon */}
                                <div className="p-2">
                                  <p.icon className={`size-5 ${isConnected?"text-red-600": "text-slate-400"}`}/>
@@ -41,13 +46,14 @@ const PlatformPickerModel = ({connectedIds,connecting,onClose,onConnect}:Platfor
                                     {p.name}
                                  </div>
                                  <div className="text-sm text-slate-500 truncate">
-                                    {isConnected?"Connected":"Connect your account"}
+                                    {isConnected?"Connected":p.description}
                                  </div>
                                </div>
 
                                {/* status */}
                                {isConnected && <CheckCircleIcon className="size-4 text-red-500 shrink-0"/>}
-
+                               {isConnecting && <div className="size-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin shrink-0"/>}
+                               {!isConnected && !isConnecting && <ExternalLink className="size-4 text-red-500 shrink-0"/>}
                             </button>
                         )
                     })}

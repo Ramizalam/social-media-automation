@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { dummyAccountsData, PLATFORMS } from '../assets/assets';
 import { PlusIcon } from 'lucide-react';
 import AccountList from '../components/AccountList';
+import PlatformPickerModel from '../components/PlatformPickerModel';
 
 
 
 const Accounts = () => {
 
   const[accounts,setAccounts]=useState<any[]>([])
-  const[connecting,setConnecting] = useState< String|null>(null)
+  const[connecting,setConnecting] = useState<string|null>(null)
   const [showPlatformPicker, setShowPlatformPicker] = useState(false);
 
   const fetchAccount = async(isSync: boolean = false ,platform?:string|null,sucessMsg?:string)=>{
@@ -43,7 +44,7 @@ const Accounts = () => {
   const handlDisconnect = async (accountId:string)=>{
     try{
       // await axios.delete(`/api/accounts/${accountId}`)
-      setAccounts(accounts.filter((a)=>a.id!==accountId))
+      setAccounts(accounts.filter((a)=>a._id!==accountId))
       alert("Account disconnected successfully")
 
     }catch(err){
@@ -52,7 +53,7 @@ const Accounts = () => {
     }
   }
 
-  const connectedIds = accounts.map((a)=>a.platformId)
+  const connectedIds = accounts.map((a)=>a.platform)
 
   return (
     <div className='p-10 max-w-4xl mx-auto'>
@@ -66,11 +67,10 @@ const Accounts = () => {
           <PlusIcon className='size-4'/> Connect Account
         </button>
        </div>
-      {/* Platform Picker Model */}
-      
-      <div>
 
-      </div>
+      {/* Platform Picker Model */}
+       {showPlatformPicker && <PlatformPickerModel connectedIds={connectedIds} connecting={connecting} onClose={()=>setShowPlatformPicker(false)} onConnect={handleConnect}/>}
+     
       {/* connected Account List */}
       <AccountList accounts={accounts} onDisconnect={handlDisconnect}/>
     </div>
