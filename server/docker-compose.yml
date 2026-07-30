@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: schedulerDB
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      # These exact names are mandatory for MongoDB to enable security
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: hardwork
+    volumes:
+      # Persists data so your users and databases are not lost on restart
+      - mongo_data:/data/db
+    networks:
+      - mongo_network
+
+volumes:
+  mongo_data:
+
+networks:
+  mongo_network:
+    driver: bridge
