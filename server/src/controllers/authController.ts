@@ -1,8 +1,9 @@
 // Register User
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"
 import { User } from "../models/User.js";
 import { Request, Response } from "express";
 import generateToken from "../utils/generateToken.js";
+
 
 // POST /api/auth/register
 export const registerUser = async(req:Request,res:Response):Promise<void> =>{
@@ -18,8 +19,7 @@ export const registerUser = async(req:Request,res:Response):Promise<void> =>{
         const hashedPassword = await bcrypt.hash(password,salt)
 
         const user = await User.create({name,email,password: hashedPassword})
-        const token = generateToken({user._id,user.email});
-    
+        const token = generateToken({id: user._id.toString(), email: user.email});
         if(user){
             res.status(201).json({_id:user._id,name:user.name,email:user.email,token})
         }else{
@@ -50,7 +50,7 @@ export const loginUser = async(req:Request,res:Response)=>{
             return
         }
 
-        const token = generateToken({user._id,user.email})
+        const token = generateToken({id: user._id.toString(), email: user.email})
         res.json({_id:user._id,name:user.name,email:user.email,token})
 
     }
