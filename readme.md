@@ -4,6 +4,19 @@ A full-stack application that lets you **generate AI-powered social media posts*
 
 ---
 
+## 📸 Screenshots
+
+### 🏠 Landing Page
+![Landing Page](screenshots/home.png)
+
+### 📆 Post Scheduler
+![Post Scheduler](screenshots/scheduler.png)
+
+### 🤖 AI Composer
+![AI Composer](screenshots/ai-composer.png)
+
+---
+
 ## ✨ Features
 
 - 🤖 **AI Post Generation** — Generates post content and a matching image prompt via **Google Gemini 2.5 Flash**
