@@ -7,7 +7,7 @@ A full-stack application that lets you **generate AI-powered social media posts*
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
-![Landing Page](screenshots/home.png)
+![Landing Page](screenshots/Landing.png)
 
 ### 📆 Post Scheduler
 ![Post Scheduler](screenshots/scheduler.png)
