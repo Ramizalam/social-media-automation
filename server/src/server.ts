@@ -5,6 +5,9 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.route.js";
 import socialAuthRouter from "./routes/socialAuth.routes.js";
+import accountRouter from "./routes/account.routes.js";
+import postRouter from "./routes/post.route.js";
+
 const app = express();
 
 //db conneciton
@@ -22,6 +25,8 @@ app.get('/',(_req:Request,_res:Response)=>{
 
 app.use("api/auth/",authRoutes)
 app.use("api/oauth",socialAuthRouter)
+app.use("api/accounts",accountRouter)
+app.use("api/posts",postRouter)
 
 //golbal error handler
 //we used '_" beacuase they are unused

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 
 export interface AuthRequest extends Request{
-    user?:any;
+    user?: any;
 }
 
 export const protect  = async (req:AuthRequest,res:Response,next:NextFunction)=>{
@@ -12,7 +12,7 @@ export const protect  = async (req:AuthRequest,res:Response,next:NextFunction)=>
     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
        try {
          token = req.headers.authorization.split(" ")[1];
-          const decode : any = jwt.verify(token,process.env.JWT_SECRET);
+          const decode : any = jwt.verify(token,process.env.JWT_SECRET as string);
           req.user = await User.findById(decode.id).select('-password')
           next();
        } catch (error) {
