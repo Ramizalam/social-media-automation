@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MailIcon, LockIcon, ArrowRightIcon, User2Icon } from "lucide-react";
+import { useAuth } from "../context/authContext";
+import api from "../api/axios";
 
 export default function Login() {
     const [loginState, setLoginState] = useState(true);
@@ -9,14 +11,19 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const {login,user} = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/dashboard");
-        }, 1000);
+       try {
+        const data = await api.post(`/api/auth${loginState?"login":"register"}`,{name,email,password})
+        login(data.user,data.token);
+        navigate("/dashboard")
+        
+       } catch (error) {
+        
+       }
     };
 
     return (
