@@ -1,8 +1,8 @@
-import { MenuIcon } from "lucide-react";
+import { Divide, MenuIcon } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 const PageTitle: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/accounts": "Social Accounts",
@@ -11,9 +11,19 @@ const PageTitle: Record<string, string> = {
 };
 
 const Layout = () => {
+  const {isAuthenticated,isLoading} = useAuth();
   const location = useLocation();
   const currentPath = location.pathname;
   const title = PageTitle[currentPath] || "Social Media Automation";
+
+  if(isLoading){
+     return(<div className=" flex h-screen item-center justify-center bg-slate-50">
+      <div className="size-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"/>
+     </div>)
+  }
+  if(!isAuthenticated ){
+    return<Navigate to="/login" replace/>
+  }
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

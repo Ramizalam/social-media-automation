@@ -3,10 +3,11 @@ import {
   LayoutDashboardIcon,
   SparklesIcon,
   UsersIcon,
- LogOutIcon
+  LogOutIcon
 } from "lucide-react";
 
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 const Sidebar = ({
   isOpen,
@@ -23,12 +24,7 @@ const Sidebar = ({
   ];
   const location = useLocation();
 
-  const { logout, user } = {
-    logout: () => {
-      window.location.href = "/";
-    },
-    user: { name: "Ramiz", email: "ramiz@example.com" },
-  };
+  const { logout, user } = useAuth();
 
   return (
     <div
@@ -77,19 +73,19 @@ const Sidebar = ({
       {/* Footer */}
       <div className="p-4 border-t border-gray-700">
         <div className="flex items-center   rounded-xl  hover:bg-slate-50 gap-2 transition-colors">
-            <div className="size-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
-                {user?.name?.charAt(0).toUpperCase() || "U"}
-            </div>
-            <div className="flex-1">
-                <div className="text-sm font-medium">{user?.name || "User"}</div>
-                <div className="text-xs text-slate-400">{user?.email || "user@example.com"}</div>
-            </div>
+          <div className="size-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
+            {user?.name?.charAt(0).toUpperCase() || "U"}
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-medium">{user?.name || "User"}</div>
+            <div className="text-xs text-slate-400">{user?.email || "user@example.com"}</div>
+          </div>
         </div>
-        <button 
-        onClick={logout}
-        className="mt-1 w-full px-3 py-2 flex items-center  gap-2 text-sm text-red-500 hover:bg-red-50 transition-all rounded duration-150">
-            <LogOutIcon className="size-4"/>
-            Sign Out
+        <button
+          onClick={logout}
+          className="mt-1 w-full px-3 py-2 flex items-center  gap-2 text-sm text-red-500 hover:bg-red-50 transition-all rounded duration-150">
+          <LogOutIcon className="size-4" />
+          Sign Out
         </button>
 
 
