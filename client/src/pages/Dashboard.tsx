@@ -10,18 +10,22 @@ const Dashboard = () => {
   useEffect(()=>{
     const fetchDashBoardData = async()=>{
       try {
-        const[postRes,accountRes,activityRes]= await Promise.all([api.get("/api/post"),api.get("/api/accounts"),api.get("api/activity")])
-        const posts = postRes.data;
-        const accounts = accountRes.data;
-        const activity = activityRes.data;
-        
+        const [postRes, accountRes, activityRes] = await Promise.all([
+          api.get("/api/posts"),
+          api.get("/api/accounts"),
+          api.get("/api/activity")
+        ]);
+        const posts = Array.isArray(postRes.data) ? postRes.data : (postRes.data?.data || []);
+        const accounts = Array.isArray(accountRes.data) ? accountRes.data : (accountRes.data?.data || []);
+        const activity = Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data?.data || []);
+
         setStats({
-          scheduled: posts.filter((p:any)=>p.status === "scheduled").length,
-          published: posts.filter((p:any)=>p.status === "published").length,
-          connectedAccounts: accounts.filter((a:any) => a.status === "connected").length
-        }) 
-        
-        setActivities(activity)
+          scheduled: posts.filter((p: any) => p.status === "scheduled").length,
+          published: posts.filter((p: any) => p.status === "published").length,
+          connectedAccounts: accounts.filter((a: any) => a.status === "connected").length
+        });
+
+        setActivities(activity);
       } catch (error) {
         console.log("Error fetching dashboard data :",error)
       } 

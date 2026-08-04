@@ -1,4 +1,4 @@
-import { Divide, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -11,21 +11,23 @@ const PageTitle: Record<string, string> = {
 };
 
 const Layout = () => {
-  const {isAuthenticated,isLoading} = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const currentPath = location.pathname;
   const title = PageTitle[currentPath] || "Social Media Automation";
 
-  if(isLoading){
-     return(<div className=" flex h-screen item-center justify-center bg-slate-50">
-      <div className="size-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"/>
-     </div>)
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-50">
+        <div className="size-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
-  if(!isAuthenticated ){
-    return<Navigate to="/login" replace/>
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="flex flex-row w-full h-screen bg-slate-50 ">

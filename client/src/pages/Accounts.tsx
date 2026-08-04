@@ -38,8 +38,7 @@ const Accounts = () => {
     const syncNeeded = params.get("sync") === "true";
     const errorMsg = params.get("error");
 
-    window.history.replaceState({}, document.title, window.location.pathname)
-    if (connectedPlatform) {
+     if (connectedPlatform) {
       const label = connectedPlatform.charAt(0).toUpperCase() + connectedPlatform.slice(1)
       const handle = connectedUsername ? `(@${connectedUsername})` : "";
 
