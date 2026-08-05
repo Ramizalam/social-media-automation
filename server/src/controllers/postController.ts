@@ -208,7 +208,7 @@ export const schedulePost = async (req: AuthRequest, res: Response): Promise<voi
             content,
             mediaUrl,
             mediaType,
-            platforms: parsedPlatforms,
+            platforms: parsedPlatforms as ("instagram" | "twitter" | "facebook" | "X" | "linkedin")[],
             scheduledFor,
             status
         });
