@@ -15,9 +15,8 @@ import { uploadBufferToCloudinary } from "../utils/uploadBuffertoCloudainary.js"
 // Generate post
 //POST /api/posts/generate
 export const generatePost = async (req: AuthRequest, res: Response): Promise<void> => {
+    const { prompt, tone, generateImage } = req.body;
     try {
-        const { prompt, tone, generateImage } = req.body;
-
         // 1. Move early validation to the top
         if (!prompt) {
             res.status(400).json({ message: "Prompt is required" });
@@ -38,7 +37,7 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
 
         // 2. Generate text using Gemini's native structured JSON schemas
         const textResponse = await genAI.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-3.6-flash",
             contents: `Generate a social media post based on this prompt: "${prompt}". Tone: ${tone}. Include relevant hashtags.`,
             config: {
                 responseMimeType: "application/json",
@@ -52,6 +51,7 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
                 }
             }
         });
+        console.log(textResponse.text);
 
         if (textResponse?.text) {
             try {

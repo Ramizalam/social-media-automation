@@ -70,7 +70,7 @@ const AIComposer = () => {
      const scheduledFor =  new Date(`${scehduleDate}T${scehduleTime}`).toISOString();
      setScheduling(true)
      try {
-       const {data} = await api.post("/api/posts/schedule",{
+       const {data} = await api.post("/api/posts",{
          platform:selectedPlatform,
          content:activeScheduler.content,
          mediaUrl:activeScheduler.mediaUrl,
