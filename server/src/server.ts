@@ -16,12 +16,28 @@ const app = express();
 await connectDB();
 await agenda.start();
 
-//middleware 
-app.use(cors(
-    {origin: process.env.FRONTEND_URL!,
-    methods:["POST","GET","PUT","DELETE"],
-    credentials:true}
-));
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        const cleanOrigin = origin.replace(/\/$/, "");
+        const cleanFrontend = (process.env.FRONTEND_URL || "").replace(/\/$/, "");
+        
+        if (
+            cleanOrigin === cleanFrontend ||
+            origin.endsWith(".vercel.app") ||
+            origin.startsWith("http://localhost:")
+        ) {
+            callback(null, true);
+        } else {
+            callback(null, false);
+        }
+    },
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
