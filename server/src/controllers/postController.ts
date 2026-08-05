@@ -10,6 +10,7 @@ import { Generation } from "../models/Generation.js";
 import { Post } from "../models/Post.js";
 import multer from "multer";
 import { uploadBufferToCloudinary } from "../utils/uploadBuffertoCloudainary.js";
+import agenda from "../config/agenda.js";
 
 
 // Generate post
@@ -212,6 +213,8 @@ export const schedulePost = async (req: AuthRequest, res: Response): Promise<voi
             scheduledFor,
             status
         });
+        await agenda.schedule(post.scheduledFor,"publish_post",{postId:post._id});
+
         res.json({ success: true, data: post });
     } catch (error) {
         console.error("Error scheduling post:", error);

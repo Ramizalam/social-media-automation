@@ -25,6 +25,7 @@
   "dependencies": {
     "@google/genai": "^2.15.0",
     "@zernio/node": "^0.2.440",
+    "agenda": "^5.0.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
     "cors": "^2.8.6",

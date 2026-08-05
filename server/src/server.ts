@@ -1,6 +1,5 @@
 import "dotenv/config"
 import express , {NextFunction, Request,Response} from "express"
-import { request } from "node:http";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.route.js";
@@ -8,12 +7,14 @@ import socialAuthRouter from "./routes/socialAuth.routes.js";
 import accountRouter from "./routes/account.routes.js";
 import postRouter from "./routes/post.route.js";
 import activityRouter from "./routes/activity.routes.js";
-import { initScheduler } from "./services/schedulerService.js";
+import agenda from "./config/agenda.js"
+import "./jobs/publishPost.js";
 
 const app = express();
 
 //db conneciton
-connectDB();
+await connectDB();
+await agenda.start();
 
 //middleware 
 app.use(cors());
@@ -32,7 +33,7 @@ app.use("/api/posts",postRouter)
 app.use("/api/activity",activityRouter)
 
 //initialize scheduler
-initScheduler();
+// initScheduler();
 
 //golbal error handler
 //we used '_" beacuase they are unused
