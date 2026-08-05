@@ -1,11 +1,11 @@
 import mongoose  from "mongoose";
 
 const postSchema = new mongoose.Schema({
-    user: {type: mongoose.Schema.Types.ObjectId , ref:"Account",required:true},
+    user: {type: mongoose.Schema.Types.ObjectId , ref:"User",required:true},
     content: {type: String, required: true},
     mediaUrl : {type: String},
     mediaType: {type: String ,enum : ["image","video","none"]},
-    platform : [{type: String, enum : ["instagram","twitter","facebook" ,"X"]}],
+    platforms : [{type: String, enum : ["instagram","twitter","facebook" ,"X","linkedin"]}],
     scheduledFor : {type: Date,required : true},
     status : {type:String, enum : ["draft","scheduled","published","failed"],default:"scheduled"},   
 },{timestamps:true})

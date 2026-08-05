@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { dummyPostsData, PLATFORMS } from "../assets/assets";
+import { PLATFORMS } from "../assets/assets";
 import {
   CalendarIcon,
   XIcon,
@@ -8,6 +8,8 @@ import {
   CalendarDaysIcon,
   SendIcon,
 } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const Scheduler = () => {
   const [post, setPost] = useState<any[]>([]);
@@ -19,42 +21,83 @@ const Scheduler = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchPosts = async () => {
-    setPost(dummyPostsData);
+    try {
+      const { data } = await api.get("/api/posts");
+      const postsArray = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+      setPost(postsArray);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
   };
   useEffect(() => {
-    fetchPosts();
-    const interval = setInterval(fetchPosts, 60000); // Fetch posts every 60 seconds
+    (async () => await fetchPosts())();
+    const interval = setInterval(async () => await fetchPosts(), 60000); // Fetch posts every 60 seconds
     return () => clearInterval(interval); // Cleanup the interval on component unmount
   }, []);
 
-  const scheduled = post
+  const postsList = Array.isArray(post) ? post : [];
+
+  const scheduled = postsList
     .filter((p: any) => p.status === "scheduled")
     .sort(
       (a: any, b: any) =>
-        new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime(),
+        new Date(a.scheduledFor || a.createdAt).getTime() - new Date(b.scheduledFor || b.createdAt).getTime(),
     );
-  const published = post
+  const published = postsList
     .filter((p: any) => p.status === "published")
     .sort(
       (a: any, b: any) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+        new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime(),
     );
-  const handleSchedulePost = async (e: React.SubmitEvent<HTMLFormElement>) => {
+
+  const handleSchedulePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setPost((prev) => [...prev, dummyPostsData[0]]);
-    }, 2000);
-    if (
-      !content ||
-      selectedPlatforms.length === 0 ||
-      !scheduleDate ||
-      !scheduleTime
-    ) {
-      alert("Please fill in all required fields.");
+    if (selectedPlatforms.length === 0) {
+      toast.error("selected atleast one platform ")
       return;
     }
+    if (!scheduleDate || !scheduleTime) {
+      toast.error("please enter Date and Time ")
+      return;
+    }
+    if (selectedPlatforms.includes('instagram') && !mediaFile) {
+      toast.error("Instagram require an Image or Video ")
+      return;
+    }
+    const scheduledFor = new Date(`${scheduleDate}T${scheduleTime}`).toISOString();
+    const formData = new FormData();
+    formData.append("content", content);
+    formData.append("scheduledFor", scheduledFor);
+    formData.append("platforms", selectedPlatforms.join(","));
+    if (mediaFile) {
+      formData.append("media", mediaFile);
+    }
+    setLoading(true);
+    try {
+      await api.post("/api/posts", formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      toast.success("Post scheduled successfully");
+      setContent("");
+      setScheduleDate("");
+      setScheduleTime("");
+      setSelectedPlatforms([]);
+      setMediaFile(null);
+      fetchPosts();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message)
+    } finally {
+      setLoading(false);
+    }
+    const now = new Date();
+    const scheduledAt = new Date(`${scheduleDate}T${scheduleTime}:00`);
+    if (scheduledAt <= now) {
+      toast.error("scheduled date and time must be in the future.");
+      return;
+    }
+    if (content.length > 280) {
+      toast.error("Content exceeds 280 characters.");
+      return;
+    }
+
   };
 
   const togglePlatformSelection = (platformId: string) =>
@@ -256,7 +299,7 @@ const Scheduler = () => {
                 >
                   <div className="flex items-center justify-between  mb-2">
                     <div className="flex gap-1.5 items-center">
-                      {p.platforms.map((platformId: string) => {
+                      {(p.platforms || p.platform || []).map((platformId: string) => {
                         const platform = PLATFORMS.find(
                           (p) => p.id === platformId,
                         );
@@ -312,7 +355,7 @@ const Scheduler = () => {
                 >
                   <div className="flex items-center justify-between  mb-2">
                     <div className="flex gap-1.5 items-center">
-                      {p.platforms.map((platformId: string) => {
+                      {(p.platforms || p.platform || []).map((platformId: string) => {
                         const platform = PLATFORMS.find(
                           (p) => p.id === platformId,
                         );
