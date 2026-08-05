@@ -17,7 +17,11 @@ await connectDB();
 await agenda.start();
 
 //middleware 
-app.use(cors());
+app.use(cors(
+    {origin: process.env.FRONTEND_URL!,
+    methods:["POST","GET","PUT","DELETE"],
+    credentials:true}
+));
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
