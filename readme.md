@@ -25,6 +25,8 @@ A full-stack application that lets you **generate AI-powered social media posts*
 - 📁 **Media Upload** — Attach your own image or video to a scheduled post via multipart form upload
 - 🔐 **JWT Authentication** — Secure register/login flow with protected API routes
 - 🗄️ **MongoDB** — Persistent storage for users, generated content, and scheduled posts
+- 🕒 **Persistent Job Queue (Agenda)** — Uses Agenda (MongoDB-backed) to schedule and publish posts reliably even if the server restarts
+
 
 ---
 
@@ -43,6 +45,7 @@ A full-stack application that lets you **generate AI-powered social media posts*
 | Storage | Cloudinary |
 | File Upload | Multer |
 | Validation | Zod |
+| Job Scheduler | Agenda |
 
 ### Frontend (`/client`)
 | Layer | Technology |
@@ -152,13 +155,16 @@ Create a `.env` file inside `server/`:
 PORT=3000
 
 # MongoDB
-MONGO_URI=mongodb://admin:hardwork@localhost:27018/socialscheduler?authSource=admin
+MONGODB_URI=mongodb://admin:hardwork@localhost:27018/socialscheduler?authSource=admin
 
 # JWT
 JWT_SECRET=your_jwt_secret
 
 # Google AI
 GEMINI_API_KEY=your_gemini_api_key
+
+# Zernio API (Social Media Publishing)
+ZERNIO_API_KEY=your_zernio_api_key
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
