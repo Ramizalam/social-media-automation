@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { dummyGenerationData, PLATFORMS } from "../assets/assets";
+import { PLATFORMS } from "../assets/assets";
 import {
   ArrowRightIcon,
   CalendarIcon,
@@ -70,7 +70,7 @@ const AIComposer = () => {
      const scheduledFor =  new Date(`${scehduleDate}T${scehduleTime}`).toISOString();
      setScheduling(true)
      try {
-       const {data} = await api.post("/api/posts",{
+       await api.post("/api/posts",{
          platform:selectedPlatform,
          content:activeScheduler.content,
          mediaUrl:activeScheduler.mediaUrl,

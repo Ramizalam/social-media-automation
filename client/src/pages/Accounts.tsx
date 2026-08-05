@@ -35,7 +35,6 @@ const Accounts = () => {
     const params = new URLSearchParams(window.location.search);
     const connectedPlatform = params.get("connected");
     const connectedUsername = params.get("username");
-    const syncNeeded = params.get("sync") === "true";
     const errorMsg = params.get("error");
 
      if (connectedPlatform) {

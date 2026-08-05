@@ -1,5 +1,4 @@
 import { CheckCircleIcon, ExternalLink, XIcon } from "lucide-react";
-import { useState } from "react";
 import { PLATFORMS } from "../assets/assets";
 
 
@@ -12,7 +11,6 @@ interface PlatformPickerModelProps{
 
 
 const PlatformPickerModel = ({connectedIds,connecting,onClose,onConnect}:PlatformPickerModelProps) => {
-    const [activeTab,setActiveTab] = useState('add-account')
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
